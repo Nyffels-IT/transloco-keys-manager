@@ -18,8 +18,6 @@ import {
   isMethodCall,
   isTemplate,
   parseTemplate,
-  isBlockNode,
-  resolveBlockChildNodes,
 } from './utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
@@ -29,11 +27,6 @@ export function pipeExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
-    if (isBlockNode(node)) {
-      traverse(resolveBlockChildNodes(node), config);
-      continue;
-    }
-
     let astTrees: AST[] = [];
 
     if (isElement(node) || isTemplate(node)) {

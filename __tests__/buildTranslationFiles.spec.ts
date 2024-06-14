@@ -58,9 +58,7 @@ type TranslationCategory =
   | 'multi-input'
   | 'scope-mapping'
   | 'comments'
-  | 'remove-extra-keys'
-  | 'self-closing'
-  | 'control-flow';
+  | 'remove-extra-keys';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
   type: TranslationCategory;
@@ -130,8 +128,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 79 }),
-          '{{count}} items': defaultValue,
+          ...generateKeys({ start: 66, end: 78 }),
         };
         [
           'Restore Options',
@@ -155,7 +152,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with directive', () => {
-        const expected = generateKeys({ end: 24 });
+        const expected = generateKeys({ end: 23 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
@@ -209,7 +206,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = generateKeys({ end: 42 });
+        let expected = generateKeys({ end: 41 });
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
@@ -230,19 +227,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           path: 'todos-page/',
           fileFormat,
         });
-      });
-    });
-
-    describe('Control flow', () => {
-      const type: TranslationCategory = 'control-flow';
-      const config = gConfig(type);
-
-      beforeEach(() => removeI18nFolder(type));
-
-      it('should work with control flow', () => {
-        let expected = generateKeys({ end: 26 });
-        createTranslations(config);
-        assertTranslation({ type, expected, fileFormat });
       });
     });
 
