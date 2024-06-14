@@ -49,6 +49,9 @@ export function defaultConfig(
     // The default value of a generated key
     defaultValue: undefined,
 
+    // The default language used for the markerDefault
+    defaultLanguage: undefined,
+
     // Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)
     replace: false,
 

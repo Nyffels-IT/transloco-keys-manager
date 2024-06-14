@@ -19,13 +19,15 @@ import { markerExtractor } from './marker.extractor';
 import { pureFunctionExtractor } from './pure-function.extractor';
 import { serviceExtractor } from './service.extractor';
 import { markerDefaultExtractor } from './marker-default.extractor';
+import { DefaultValues } from '..';
 
 export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
 }
 
 const translocoImport = /@(jsverse|ngneat|nyffels)\/transloco/;
-const translocoKeysManagerImport = /@(jsverse|ngneat|nyffels)\/transloco-keys-manager/;
+const translocoKeysManagerImport =
+  /@(jsverse|ngneat|nyffels)\/transloco-keys-manager/;
 function TSExtractor(config: ExtractorConfig): ScopeMap {
   const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
@@ -50,12 +52,17 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   extractors
     .map((ex) => ex(ast))
     .flat()
-    .forEach(({ key, lang }) => {
+    .forEach(({ key, lang, defaultLanguageValue }) => {
+      if ((defaultLanguageValue ?? '').trim().length > 0) {
+        DefaultValues.addDefaultValue(key, defaultLanguageValue as string);
+      }
+
       const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
         key,
         lang,
         scopes,
       );
+
       addKey({
         scopeAlias,
         keyWithoutScope,

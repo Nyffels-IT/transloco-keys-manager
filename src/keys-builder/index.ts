@@ -13,6 +13,7 @@ export async function buildTranslationFiles(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
 
+  DefaultValues.defaultLanguage = config.defaultLanguage ?? '';
   setConfig(config);
   logger.log(
     '\x1b[4m%s\x1b[0m',
@@ -40,4 +41,17 @@ export async function buildTranslationFiles(inlineConfig: Config) {
     scopeToKeys,
     ...config,
   });
+}
+
+export abstract class DefaultValues {
+  private static _defaultValues: { key: string; value: string }[] = [];
+  public static defaultLanguage: string;
+
+  public static addDefaultValue(key: string, value: string) {
+    this._defaultValues.push({ key, value });
+  }
+
+  public static getDefaultValues() {
+    return this._defaultValues;
+  }
 }

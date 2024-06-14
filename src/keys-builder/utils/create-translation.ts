@@ -34,14 +34,14 @@ function resolveTranslation({
 function createJson(config: CreateTranslationOptions) {
   const { translation } = config;
 
-  return stringify(
-    resolveTranslation({
-      ...config,
-      translation: getConfig().unflat
-        ? unflatten(translation, { object: true })
-        : translation,
-    }),
-  );
+  const newTranslation = resolveTranslation({
+    ...config,
+    translation: getConfig().unflat
+      ? unflatten(translation, { object: true })
+      : translation,
+  });
+
+  return stringify(newTranslation);
 }
 
 function createPot(config: CreateTranslationOptions) {

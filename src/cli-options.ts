@@ -75,6 +75,11 @@ export const optionDefinitions = [
     description: `The default value of a generated key`,
   },
   {
+    name: 'default-language',
+    type: String,
+    description: `The default language used for markerDefault variant`,
+  },
+  {
     name: 'add-missing-keys',
     alias: 'a',
     type: Boolean,

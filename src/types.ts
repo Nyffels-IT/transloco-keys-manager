@@ -5,6 +5,7 @@ export type Config = {
   translationsPath: string;
   langs: string[];
   defaultValue: undefined | string;
+  defaultLanguage: undefined | string;
   replace: boolean;
   addMissingKeys: boolean;
   removeExtraKeys: boolean;

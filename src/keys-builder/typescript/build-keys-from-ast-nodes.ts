@@ -2,6 +2,7 @@ import { Node, StringLiteral, NoSubstitutionTemplateLiteral } from 'typescript';
 import ts from 'typescript';
 
 import { TSExtractorResult } from './types';
+import { isString } from '../../utils/validators.utils';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
@@ -34,6 +35,49 @@ export function buildKeysFromASTNodes(
 
       for (const key of keys) {
         result.push({ key, lang });
+      }
+    }
+  }
+
+  return result;
+}
+
+export function buildDefaultKeysFromASTNodes(
+  nodes: Node[],
+  allowedMethods = ['translate', 'selectTranslate'],
+): TSExtractorResult {
+  const result: TSExtractorResult = [];
+
+  for (let node of nodes) {
+    if (ts.isCallExpression(node.parent)) {
+      const method = node.parent.expression;
+      let methodName = '';
+      if (ts.isIdentifier(method)) {
+        methodName = method.text;
+      } else if (ts.isPropertyAccessExpression(method)) {
+        methodName = method.name.text;
+      }
+      if (!allowedMethods.includes(methodName)) {
+        continue;
+      }
+
+      const [keyNode, defaultValueNode, _, langNode] = node.parent.arguments;
+      let lang = isStringNode(langNode) ? langNode.text : '';
+      let keys: string[] = [];
+
+      if (isStringNode(keyNode)) {
+        keys = [keyNode.text];
+      } else if (ts.isArrayLiteralExpression(keyNode)) {
+        keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
+      }
+
+      let defaultLanguageValue: string = "";
+      if (isStringNode(defaultValueNode)) {
+        defaultLanguageValue = defaultValueNode.text;
+      }
+
+      for (const key of keys) {
+        result.push({ key, lang, defaultLanguageValue });
       }
     }
   }

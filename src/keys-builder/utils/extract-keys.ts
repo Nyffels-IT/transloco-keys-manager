@@ -10,7 +10,7 @@ import { devlog } from '../../utils/logger';
 import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
-  { input, scopes, defaultValue, files }: Config,
+  { input, scopes, defaultValue, files, defaultLanguage }: Config,
   fileType: FileType,
   extractor: (config: ExtractorConfig) => ScopeMap,
 ): ExtractionResult {

@@ -1,3 +1,4 @@
+import { DefaultValues } from '.';
 import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';
 import { getLogger } from '../utils/logger';
@@ -14,6 +15,7 @@ export async function createTranslationFiles({
   removeExtraKeys,
   scopes,
   fileFormat,
+  defaultLanguage,
 }: Config & { scopeToKeys: ScopeMap }) {
   const logger = getLogger();
 
@@ -25,30 +27,37 @@ export async function createTranslationFiles({
   });
   const globalFiles = langs.map((lang) => ({
     path: `${output}/${lang}.${fileFormat}`,
+    lang,
   }));
   const actions: FileAction[] = [];
 
-  for (const { path } of globalFiles) {
+  for (const { path, lang } of globalFiles) {
     actions.push(
-      buildTranslationFile({
-        path,
-        translation: scopeToKeys.__global,
-        replace,
-        removeExtraKeys,
-        fileFormat,
-      }),
+      buildTranslationFile(
+        {
+          path,
+          translation: scopeToKeys.__global,
+          replace,
+          removeExtraKeys,
+          fileFormat,
+        },
+        lang == defaultLanguage,
+      ),
     );
   }
 
-  for (const { path, scope } of scopeFiles) {
+  for (const { path, scope, lang } of scopeFiles) {
     actions.push(
-      buildTranslationFile({
-        path,
-        translation: scopeToKeys[scope],
-        replace,
-        removeExtraKeys,
-        fileFormat,
-      }),
+      buildTranslationFile(
+        {
+          path,
+          translation: scopeToKeys[scope],
+          replace,
+          removeExtraKeys,
+          fileFormat,
+        },
+        lang == defaultLanguage,
+      ),
     );
   }
 
