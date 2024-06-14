@@ -1,5 +1,5 @@
 {
-  "name": "@jsverse/transloco-keys-manager",
+  "name": "@nyffels/transloco-keys-manager",
   "version": "4.2.2",
   "description": "Extract translatable keys from projects that uses Transloco",
   "engines": {
