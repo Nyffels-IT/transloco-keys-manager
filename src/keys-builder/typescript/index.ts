@@ -18,6 +18,7 @@ import { inlineTemplateExtractor } from './inline-template';
 import { markerExtractor } from './marker.extractor';
 import { pureFunctionExtractor } from './pure-function.extractor';
 import { serviceExtractor } from './service.extractor';
+import { markerDefaultExtractor } from './marker-default.extractor';
 
 export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
@@ -36,6 +37,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
 
   if (translocoKeysManagerImport.test(content)) {
     extractors.push(markerExtractor);
+    extractors.push(markerDefaultExtractor);
   }
 
   const ast = tsquery.ast(content, undefined, ScriptKind.TS);
